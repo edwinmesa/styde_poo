@@ -47,3 +47,7 @@ $person2 = new Person('Sair', 'Cetina');
 //exit($person2->fullName());
 
 echo "{$person1->fullName()} es amigo de {$person2->fullName()}";
+
+/*
+ * Fin de la clase 1
+ */
