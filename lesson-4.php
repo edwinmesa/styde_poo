@@ -47,7 +47,6 @@ abstract class Unit {
 }
 
 class Soldier extends Unit {
-
     public function attack(Unit $oponent) {
         show("{$this->name} corta a $oponent en dos");
     }
@@ -60,6 +59,8 @@ class Archer extends Unit {
 
     public function attack(Unit $oponent) {
         show("{$this->getName()} dispara una flecha a {$oponent->getName()}");
+        
+        
         
         $oponent->setHp($oponent->getHp()-$this->damage);
         if($oponent->getHp()<=0){
