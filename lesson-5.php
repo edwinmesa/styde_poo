@@ -19,10 +19,10 @@ abstract class Unit {
     protected $name;
     protected $hp = 40;
 
-    public function setHp($points) {
-        $this->hp = $points;
-        show("{$this->getName()} ahora tiene {$this->hp} puntos de vida");
-    }
+//    public function setHp($points) {
+//        $this->hp = $points;
+//        show("{$this->getName()} ahora tiene {$this->hp} puntos de vida");
+//    }
 
     public function getHp() {
         return $this->hp;
@@ -43,7 +43,9 @@ abstract class Unit {
     abstract public function attack(Unit $oponent);
 
     public function takeDamage($damage) {
-        $this->setHp($this->hp - $damage);
+//        $damage = $this->absorbDamage($damage);
+        $this->hp=($this->hp - $this->absorbDamage($damage));
+        show("{$this->getName()} ahora tiene {$this->hp} puntos de vida");
         if ($this->hp <= 0) {
             $this->dier();
         }
@@ -51,6 +53,11 @@ abstract class Unit {
 
     public function dier() {
         show("{$this->getName()} muere");
+        exit();
+    }
+    
+    protected function absorbDamage($damage) {
+        return $damage;
     }
 
 }
@@ -58,17 +65,79 @@ abstract class Unit {
 class Soldier extends Unit {
 
     protected $damage = 40;
+    protected $armor;
+
+    /*
+     * en el contructor se pasa la instancia de la clase armadura,
+     * se pone opcional no se obliga. Por otro lado se crea a traves
+     * del contructor heredado para obligar a pasarle la clase armadura
+     * al soldado, esto se conoce como dependencias.
+     */
+
+    public function __construct($name) {
+//        $this->setArmor($armor);
+        parent::__construct($name);
+    }
+
+    public function setArmor(Armor $armor = null) {
+        $this->armor = $armor;
+    }
 
     public function attack(Unit $oponent) {
-        show("{$this->name} corta a {$oponent->getName()} en dos");
+        show("{$this->name} ataca con la espada {$oponent->getName()}");
         $oponent->takeDamage($this->damage);
     }
 
-    public function takeDamage($damage) {
-        return parent::takeDamage($damage / 2);
+//    public function takeDamage($damage) {
+//        $damage = $this->absorbDamage($damage);
+//        return parent::takeDamage($damage);
+//    }
+
+    public function absorbDamage($damage) {
+        if ($this->armor) {
+            $damage = $this->armor->absorbDamage($damage);
+        }
+        return $damage;
     }
 
 }
+
+interface Armor{
+    public function absorbDamage($damage);
+}
+
+class BronzeArmor implements Armor {
+    public function absorbDamage($damage) {
+        return $damage / 2;
+    }
+
+}
+
+class SilverArmor implements Armor{
+    
+    public function absorbDamage($damage) {
+        return $damage / 3;
+    }
+
+}
+
+class CursedArmor implements Armor{
+    public function absorbDamage($damage) {
+        return $damage * 2;
+    }
+}  
+
+//class SoldierWithSilverArmor extends Soldier{
+//    public function takeDamage($damage) {
+//        return parent::takeDamage($damage/3);
+//    }
+//}
+//
+//class SoldierWithGoldArmor extends Soldier{
+//    public function takeDamage($damage) {
+//        return parent::takeDamage($damage/3);
+//    }
+//}
 
 class Archer extends Unit {
 
@@ -76,22 +145,24 @@ class Archer extends Unit {
 
     public function attack(Unit $oponent) {
         show("{$this->getName()} dispara una flecha a {$oponent->getName()}");
-    
+
         $oponent->takeDamage($this->damage);
     }
-    public function takeDamage($damage) {
-        if(rand(0,1)==1){
-            return parent::takeDamage($damage);
-        }
-    }
 
+//    public function takeDamage($damage) {
+//        if (rand(0, 1) == 1) {
+//            return parent::takeDamage($damage);
+//        }
+//    }
 }
 
+$armor = new BronzeArmor();
 $sair = new Archer('sar');
 $edwin = new Soldier('edw');
 $edwin->move('Norte');
 //$edwin->attack($sair);
 $sair->attack($edwin);
+$edwin->setArmor(new CursedArmor());
 $sair->attack($edwin);
 
 $edwin->attack($sair);
