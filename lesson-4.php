@@ -17,11 +17,12 @@ abstract class Unit {
     protected $alive = true;
     protected $name;
     protected $hp = 40;
-    
+
     public function setHp($points) {
         $this->hp = $points;
         show("{$this->getName()} ahora tiene {$this->hp} puntos de vida");
     }
+
     public function getHp() {
         return $this->hp;
     }
@@ -40,6 +41,13 @@ abstract class Unit {
 
     abstract public function attack(Unit $oponent);
 
+    public function takeDamage($damage) {
+        $this->hp = $this->hp - $damage;
+        if ($this->getHp() <= 0) {
+            $this->dier();
+        }
+    }
+
     public function dier() {
         show("{$this->getName()} muere");
     }
@@ -47,6 +55,7 @@ abstract class Unit {
 }
 
 class Soldier extends Unit {
+
     public function attack(Unit $oponent) {
         show("{$this->name} corta a $oponent en dos");
     }
@@ -59,14 +68,32 @@ class Archer extends Unit {
 
     public function attack(Unit $oponent) {
         show("{$this->getName()} dispara una flecha a {$oponent->getName()}");
-        
-        
-        
-        $oponent->setHp($oponent->getHp()-$this->damage);
-        if($oponent->getHp()<=0){
-              $oponent->dier();
+        /*
+         * La programacion estructurada nos obliga  a programar y tal vez buscar'
+         * desde otra fuente informacion para tomar decisiones.
+         * La programacion orientada a objetos a traves del principio
+         * tell don't ask donde no pedimos informacion desde otras fuentes
+         * sino tomamos decisiones en el codigo interno o atraves de un comando
+         * indicandole que hacer. 
+         */
+
+        /*
+         * Forma antigua
+         */
+        if ($oponent instanceof Soldier) {
+            $damage = $this->damage / 2;
+        } else {
+            $damage = $this->damage;
         }
-      
+        /*
+         * Forma Correcta
+         */
+        $oponent->takeDamage($this->damage);
+
+        $oponent->setHp($oponent->getHp() - $damage);
+        if ($oponent->getHp() <= 0) {
+            $oponent->dier();
+        }
     }
 
 }
