@@ -40,10 +40,14 @@ abstract class Unit {
     }
 
     abstract public function attack(Unit $oponent);
+    /*
+     * Este metodo se diseña para recibir el daño del oponente
+     * Y calcular la vida
+     */
 
     public function takeDamage($damage) {
-        $this->hp = $this->hp - $damage;
-        if ($this->getHp() <= 0) {
+        $this->setHp($this->hp - $damage);
+        if ($this->hp <= 0) {
             $this->dier();
         }
     }
@@ -56,8 +60,15 @@ abstract class Unit {
 
 class Soldier extends Unit {
 
+    protected $damage = 40;
+
     public function attack(Unit $oponent) {
-        show("{$this->name} corta a $oponent en dos");
+        show("{$this->name} corta a {$oponent->getName()} en dos");
+        $oponent->takeDamage($this->damage);
+    }
+
+    public function takeDamage($damage) {
+        return parent::takeDamage($damage / 2);
     }
 
 }
@@ -80,19 +91,24 @@ class Archer extends Unit {
         /*
          * Forma antigua
          */
-        if ($oponent instanceof Soldier) {
-            $damage = $this->damage / 2;
-        } else {
-            $damage = $this->damage;
-        }
+//        if ($oponent instanceof Soldier) {
+//            $damage = $this->damage / 2;
+//        } else {
+//            $damage = $this->damage;
+//        }
         /*
          * Forma Correcta
          */
         $oponent->takeDamage($this->damage);
-
-        $oponent->setHp($oponent->getHp() - $damage);
-        if ($oponent->getHp() <= 0) {
-            $oponent->dier();
+//
+//        $oponent->setHp($oponent->getHp() - $damage);
+//        if ($oponent->getHp() <= 0) {
+//            $oponent->dier();
+//        }
+    }
+    public function takeDamage($damage) {
+        if(rand(0,1)==1){
+            return parent::takeDamage($damage);
         }
     }
 
@@ -104,6 +120,8 @@ $edwin->move('Norte');
 //$edwin->attack($sair);
 $sair->attack($edwin);
 $sair->attack($edwin);
+
+$edwin->attack($sair);
 
 /*
  * Fin de lesson -4
