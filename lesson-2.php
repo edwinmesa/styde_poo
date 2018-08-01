@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 class Person {
 
@@ -109,10 +109,6 @@ echo $person1->getAge();
 //$person1->setNickName('ddr');
 //exit($person1->getAge());
 //exit($person1->getNickName());
-
-
-
-
 
 //echo "{$person1->fullName()} es amigo de {$person2->fullName()}";
 
