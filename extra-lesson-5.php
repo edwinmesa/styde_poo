@@ -20,10 +20,10 @@ abstract class Unit {
         return $this->name;
     }
 
-    private function setHp($points) {
-        $this->hp = $points;
-        show("{$this->name} ahora tiene {$this->hp} puntos de vida");
-    }
+//    private function setHp($points) {
+//        $this->hp = $points;
+//        show("{$this->name} ahora tiene {$this->hp} puntos de vida");
+//    }
 
     public function getHp() {
         return $this->hp;
@@ -40,7 +40,8 @@ abstract class Unit {
     abstract public function attack(Unit $oponent);
 
     public function takeDamage($damage) {
-        $this->setHp($this->hp - $damage);
+        $this->hp = $this->hp - $this->absorbDamage($damage);
+        show("{$this->name} ahora tiene {$this->hp} puntos de vida");
         if ($this->hp <= 0) {
             $this->dier();
         }
@@ -48,6 +49,12 @@ abstract class Unit {
 
     public function dier() {
         show("{$this->name} muere");
+        exit();
+    }
+    
+    public function absorbDamage($damage) {
+        
+        return $damage;
     }
 
 }
@@ -55,14 +62,30 @@ abstract class Unit {
 class Soldier extends Unit {
 
     protected $damage = 40;
+    protected $armor;
+
+    public function __construct($name) {
+        parent::__construct($name);
+    }
+
+    public function setArmor(Armor $armor = null) {
+        $this->armor = $armor;
+    }
 
     public function attack(Unit $oponent) {
-        show("{$this->name} corta a {$oponent->getName()} en dos");
+        show("{$this->name} ataca con la espada a {$oponent->getName()}");
         $oponent->takeDamage($this->damage);
     }
 
-    public function takeDamage($damage) {
-        return parent::takeDamage($damage / 2);
+//    public function takeDamage($damage) {
+//       $damage = $this->absorbDamage($damage);
+//        return parent::takeDamage($damage);
+//    }
+    public function absorbDamage($damage) {
+        if ($this->armor) {
+            $damage = $this->armor->absorbDamage($damage);
+        }
+        return $damage;
     }
 
 }
@@ -76,17 +99,45 @@ class Archer extends Unit {
         $oponent->takeDamage($this->damage);
     }
 
-    public function takeDamage($damage) {
-        if (rand(0, 1) == 1) {
-            return parent::takeDamage($damage);
-        }
+//    public function takeDamage($damage) {
+//        if (rand(0, 1) == 1) {
+//            return parent::takeDamage($damage);
+//        }
+//    }
+}
+
+interface Armor{
+    public function absorbDamage($damage);
+}
+
+class BronzeArmor implements Armor{
+
+    public function absorbDamage($damage) {
+        return $damage / 2;
+    }
+}
+
+class SilverArmor implements Armor{
+    
+    public function absorbDamage($damage) {
+        return $damage / 3;
     }
 
 }
 
-$sar = new Soldier('Bestia');
+class CursedArmor implements Armor{
+    
+    public function absorbDamage($damage) {
+        return $damage * 2;
+    }
+
+}
+
+$armor = new BronzeArmor();
+$sar = new Soldier('Bestia', $armor);
 $edwin = new Archer('Sar');
 //$edwin->move('Norte');
 $edwin->attack($sar);
+$sar->setArmor(new CursedArmor);
 $edwin->attack($sar);
 $sar->attack($edwin);
