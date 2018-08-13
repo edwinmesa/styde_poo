@@ -1,33 +1,37 @@
 <?php
 
 /*
- * Incio de la lesson extra 03
- * Herencia: Clase extiende de otra.
- */
-/*
- * La unidad es algo abstracto, que puede representar muchos objetos
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 function show($message) {
-    echo "<p>$message</p>";
+    echo "<p>{$message}</p>";
 }
 
 abstract class Unit {
 
+    protected $hp = 40;
     protected $alive = true;
     protected $name;
-    protected $hp = 40;
 
     public function getName() {
         return $this->name;
     }
-    public function setHp($points) {
+    /*
+     * Este metodo define los puntos de vida y muestra los puntos
+     * Si tiene ataques o con los iniciales
+     */
+    private function setHp($points) {
         $this->hp = $points;
         show("{$this->name} ahora tiene {$this->hp} puntos de vida");
     }
+
     public function getHp() {
         return $this->hp;
     }
+
     public function __construct($name) {
         $this->name = $name;
     }
@@ -38,6 +42,13 @@ abstract class Unit {
 
     abstract public function attack(Unit $oponent);
 
+    public function takeDamage($damage) {
+        $this->setHp($this->hp - $damage);
+        if ($this->hp <= 0) {
+            $this->dier();
+        }
+    }
+
     public function dier() {
         show("{$this->name} muere");
     }
@@ -46,8 +57,19 @@ abstract class Unit {
 
 class Soldier extends Unit {
 
+    protected $damage = 40;
+    protected $armor;
+    public function __construct($name, $armor = 2) {
+        $this->armor = $armor;
+        return parent::__construct($name);
+    }
     public function attack(Unit $oponent) {
-        show("{$this->name} corta a $oponent en dos");
+        show("{$this->name} ataca con la espada a  {$oponent->getName()}");
+        $oponent->takeDamage($this->damage);
+    }
+
+    public function takeDamage($damage) {
+        return parent::takeDamage($damage / $this->armor);
     }
 
 }
@@ -58,19 +80,21 @@ class Archer extends Unit {
 
     public function attack(Unit $oponent) {
         show("{$this->name} dispara una flecha a {$oponent->getName()}");
-        $oponent->setHp($oponent->getHp() - $this->damage);
-        if ($oponent->getHp() <= 0) {
-            $oponent->dier();
+        $oponent->takeDamage($this->damage);
+    }
+
+    public function takeDamage($damage) {
+        if (rand(0, 1) == 1) {
+            return parent::takeDamage($damage);
         }
     }
 
 }
 
-$edwin = new Soldier('edw');
-$sair = new Archer('sar');
-$sair->attack($edwin);
-$sair->attack($edwin);
-
-/*
- * Fin de lesson extra -3
- */
+$sar = new Soldier('Bestia',3);
+$edwin = new Archer('Sar');
+$edwin->getHp();
+//$edwin->move('Norte');
+$edwin->attack($sar);
+$edwin->attack($sar);
+$sar->attack($edwin);
