@@ -11,12 +11,16 @@
  *
  * @author andredw
  */
+
 namespace Styde;
+
 abstract class Unit {
 
     protected $hp = 40;
     protected $alive = true;
     protected $name;
+    protected $armor;
+    protected $weapon;
 
     public function getName() {
         return $this->name;
@@ -26,15 +30,26 @@ abstract class Unit {
         return $this->hp;
     }
 
-    public function __construct($name) {
+    public function __construct($name, Weapon $weapon = null) {
         $this->name = $name;
+        $this->weapon = $weapon;
+    }
+    
+    public function setWeapon(Weapon $weapon) {
+        $this->weapon = $weapon;
     }
 
     public function move($direction) {
         show("{$this->name} camina hacia $direction");
     }
 
-    abstract public function attack(Unit $oponent);
+    public function attack(Unit $oponent) {
+        if(!$this-> weapon){
+            throw new \Exception("La unidad no tiene aramas");
+        }
+        show($this->weapon->getDescription($this, $oponent));
+        $oponent->takeDamage($this->weapon->getDamage());
+    }
 
     public function takeDamage($damage) {
         $this->hp = $this->hp - $this->absorbDamage($damage);
@@ -49,7 +64,18 @@ abstract class Unit {
         exit();
     }
 
+//    public function absorbDamage($damage) {
+//        return $damage;
+//    }
+
+    public function setArmor(Armor $armor = null) {
+        $this->armor = $armor;
+    }
+
     public function absorbDamage($damage) {
+        if ($this->armor) {
+            $damage = $this->armor->absorbDamage($damage);
+        }
         return $damage;
     }
 
