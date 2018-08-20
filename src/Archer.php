@@ -12,13 +12,9 @@
  * @author andredw
  */
 namespace Styde;
+use Styde\Weapons\Bow;
 class Archer extends Unit {
-
-    protected $damage = 20;
-
-    public function attack(Unit $oponent) {
-        show("{$this->name} dispara una flecha a {$oponent->getName()}");
-        $oponent->takeDamage($this->damage);
+    public function __construct($name, Bow $bow) {
+        parent::__construct($name,$bow);
     }
-
 }

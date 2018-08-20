@@ -16,26 +16,26 @@ namespace Styde;
 class Soldier extends Unit {
 
     protected $damage = 40;
-    protected $armor;
+//    protected $armor;
 
-    public function __construct($name) {
-        return parent::__construct($name);
-    }
+//    public function __construct($name) {
+//        return parent::__construct($name);
+//    }
 
-    public function setArmor(Armor $armor = null) {
-        $this->armor = $armor;
-    }
+//    public function setArmor(Armor $armor = null) {
+//        $this->armor = $armor;
+//    }
 
-    public function attack(Unit $oponent) {
-        show("{$this->name} ataca con la espada a  {$oponent->getName()}");
-        $oponent->takeDamage($this->damage);
-    }
+//    public function attack(Unit $oponent) {
+//        show("{$this->name} ataca con la espada a  {$oponent->getName()}");
+//        $oponent->takeDamage($this->damage);
+//    }
 
-    public function absorbDamage($damage) {
-        if ($this->armor) {
-            $damage = $this->armor->absorbDamage($damage);
-        }
-        return $damage;
-    }
+//    public function absorbDamage($damage) {
+//        if ($this->armor) {
+//            $damage = $this->armor->absorbDamage($damage);
+//        }
+//        return $damage;
+//    }
 
 }
