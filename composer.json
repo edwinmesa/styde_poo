@@ -1,0 +1,13 @@
+{
+    "name": "styde/poo",
+    "description": "Proyecto DEMO para el curso orientado a objetos",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Edwin Mesa",
+            "email": "edwinsar.mes@gmail.com"
+        }
+    ],
+    "require": {}
+}
