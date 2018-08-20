@@ -9,5 +9,10 @@
             "email": "edwinsar.mes@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload":{
+        "psr-4":{
+            "Styde\\":"src/"
+        }
+    }
 }
