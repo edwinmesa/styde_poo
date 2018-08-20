@@ -14,7 +14,7 @@
 
 namespace Styde;
 
-abstract class Unit {
+class Unit {
 
     protected $hp = 40;
     protected $alive = true;
@@ -34,7 +34,7 @@ abstract class Unit {
         $this->name = $name;
         $this->weapon = $weapon;
     }
-    
+
     public function setWeapon(Weapon $weapon) {
         $this->weapon = $weapon;
     }
@@ -44,15 +44,16 @@ abstract class Unit {
     }
 
     public function attack(Unit $oponent) {
-        if(!$this-> weapon){
-            throw new \Exception("La unidad no tiene aramas");
-        }
-        show($this->weapon->getDescription($this, $oponent));
-        $oponent->takeDamage($this->weapon->getDamage());
+//        if (!$this->weapon) {
+//            throw new \Exception("La unidad no tiene aramas");
+//        }
+        $attack = $this->weapon->createAttack();
+        show($attack->getDescription($this, $oponent));
+        $oponent->takeDamage($attack);
     }
 
-    public function takeDamage($damage) {
-        $this->hp = $this->hp - $this->absorbDamage($damage);
+    public function takeDamage(Attack $attack) {
+        $this->hp = $this->hp - $this->absorbDamage($attack->getDamage());
         show("{$this->name} ahora tiene {$this->hp} puntos de vida");
         if ($this->hp <= 0) {
             $this->dier();

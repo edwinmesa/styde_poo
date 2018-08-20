@@ -8,7 +8,7 @@
 
 /**
  * Description of Soldier
- *
+ * Clase soldado se elimina en la leccion 9
  * @author andredw
  */
 namespace Styde;
