@@ -12,7 +12,7 @@
  * @author andredw
  */
 namespace Styde;
-use Warcraft\Armor;
+
 class CursedArmor implements Armor {
 
     public function absorbDamage($damage) {

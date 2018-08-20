@@ -5,8 +5,8 @@
  *  
  */
 namespace Styde;
-require './src/helpers.php';
-require './vendor/Armor.php';
+require '../src/helpers.php';
+require '../vendor/Armor.php';
 
 spl_autoload_register(function ($className) {
     if (strpos($className, 'Styde\\') === 0) {
@@ -17,7 +17,6 @@ spl_autoload_register(function ($className) {
 //exit($className);
     }
 });
-
 $armor = new BronzeArmor();
 $sar = new Soldier('Bestia');
 $edwin = new Archer('Sar');
